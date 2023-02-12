@@ -1,4 +1,4 @@
-package objects;
+package tiles;
 
 public class LevelMap {
 

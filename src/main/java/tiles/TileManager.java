@@ -12,7 +12,6 @@ import javax.imageio.ImageIO;
 
 import game.GamePanel;
 import game.GraphicsTools;
-import objects.LevelMap;
 
 public class TileManager {
 

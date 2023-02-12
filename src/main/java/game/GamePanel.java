@@ -12,10 +12,12 @@ import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
 
 import characters.Player;
-import objects.LevelMap;
+import tiles.LevelMap;
 import tiles.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
+
+	private static final long serialVersionUID = -7080542685453661356L;
 
 	// tile settings
 	private final int originalTileSize = 16;
