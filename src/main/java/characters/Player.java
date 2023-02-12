@@ -4,15 +4,12 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import game.GamePanel;
 import game.GraphicsTools;
 import game.KeyHandler;
-import objects.Item;
 
 public class Player {
 
@@ -21,13 +18,11 @@ public class Player {
 	private int tileSize;
 	private int screenX;
 	private int screenY;
-	private int animationCounter = 0;
 	private int speed = 4;
 	
 	private String direction;
 	private Rectangle solidArea;
 	
-	private List<Item> inventory = new ArrayList<>();
 	private GamePanel gamePanel;
 	private KeyHandler keyHandler;
 	
@@ -37,7 +32,7 @@ public class Player {
 		this.keyHandler = keyHandler;
 		tileSize = gamePanel.getTileSize();
 
-		// hard coding player image solid area
+		// hard-coding player image solid area
 		solidArea = new Rectangle(6, 6, 20, 20);
 		
 		loadPlayerImages();

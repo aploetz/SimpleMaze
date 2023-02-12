@@ -5,30 +5,39 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
+	private GamePanel gamePanel;
+	
 	private boolean upPressed = false;
 	private boolean downPressed = false;
 	private boolean leftPressed = false;
 	private boolean rightPressed = false;
+	private boolean enterPressed = false;
 	
-	public KeyHandler() {
-
+	public KeyHandler(GamePanel gamePanel) {
+		this.gamePanel = gamePanel;
 	}
 
 	public void keyPressed(KeyEvent keyEvent) {
 		
 		int code = keyEvent.getKeyCode();
 		
-		if (code == KeyEvent.VK_W) {
-			upPressed = true;
-		}
-		if (code == KeyEvent.VK_A) {
-			leftPressed = true;
-		}
-		if (code == KeyEvent.VK_S) {
-			downPressed = true;
-		}
-		if (code == KeyEvent.VK_D) {
-			rightPressed = true;
+		if (!gamePanel.getIsFinished()) {
+			if (code == KeyEvent.VK_W) {
+				upPressed = true;
+			}
+			if (code == KeyEvent.VK_A) {
+				leftPressed = true;
+			}
+			if (code == KeyEvent.VK_S) {
+				downPressed = true;
+			}
+			if (code == KeyEvent.VK_D) {
+				rightPressed = true;
+			}
+		} else {
+			if (code == KeyEvent.VK_ENTER || code == KeyEvent.VK_ESCAPE) {
+				gamePanel.stopGame();
+			}
 		}
 	}
 
@@ -48,6 +57,9 @@ public class KeyHandler implements KeyListener {
 		if (code == KeyEvent.VK_D) {
 			rightPressed = false;
 		}
+		if (code == KeyEvent.VK_ENTER) {
+			enterPressed = false;
+		}
 	}
 
 	public void keyTyped(KeyEvent arg0) {
@@ -58,31 +70,19 @@ public class KeyHandler implements KeyListener {
 		return upPressed;
 	}
 
-	public void setUpPressed(boolean upPressed) {
-		this.upPressed = upPressed;
-	}
-
 	public boolean isDownPressed() {
 		return downPressed;
-	}
-
-	public void setDownPressed(boolean downPressed) {
-		this.downPressed = downPressed;
 	}
 
 	public boolean isLeftPressed() {
 		return leftPressed;
 	}
 
-	public void setLeftPressed(boolean leftPressed) {
-		this.leftPressed = leftPressed;
-	}
-
 	public boolean isRightPressed() {
 		return rightPressed;
 	}
 
-	public void setRightPressed(boolean rightPressed) {
-		this.rightPressed = rightPressed;
+	public boolean isEnterPressed() {
+		return enterPressed;
 	}
 }

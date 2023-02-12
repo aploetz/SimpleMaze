@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.net.URL;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
 
 import characters.Player;
@@ -13,8 +17,9 @@ import tiles.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
 
-	final int originalTileSize = 16;
-	final int scale = 2;
+	// tile settings
+	private final int originalTileSize = 16;
+	private final int scale = 2;
 
 	// screen settings
 	private final int tileSize = originalTileSize * scale;  // 32x32 by default
@@ -24,12 +29,14 @@ public class GamePanel extends JPanel implements Runnable {
 	private final int screenHeight = tileSize * maxScreenRow; // 512
 	
 	// Game engine
+	private final int fPS = 60; // frames per second
 	private Thread gameThread;
 	private TileManager tileMgr;
-	private KeyHandler keyHandler = new KeyHandler();
-	private LevelMap map = new LevelMap();
+	private KeyHandler keyHandler = new KeyHandler(this);
+	private LevelMap map;
 	private CollisionChecker collisionChecker;
-	private final int fPS = 60; // frames per second
+	private boolean isFinished = false;
+	private double playTime;
 	
 	// characters and objects
 	private Player player = new Player(this, keyHandler);
@@ -42,6 +49,7 @@ public class GamePanel extends JPanel implements Runnable {
 		this.setFocusable(true);
 		
 		// prepare level map
+		map = new LevelMap();
 		map.setFileName("level1.txt");
 		map.setStartX(0);
 		map.setStartY(14);
@@ -57,6 +65,8 @@ public class GamePanel extends JPanel implements Runnable {
 		// invoke TileManager and CollisionChecker
 		this.tileMgr = new TileManager(this, map);
 		this.collisionChecker = new CollisionChecker(this);
+		
+		playTime = 0D;
 	}
 
 	public void startGameThread() {
@@ -74,11 +84,10 @@ public class GamePanel extends JPanel implements Runnable {
 		double nextDrawTime = System.nanoTime() + drawInterval;
 		
 		while (gameThread != null) {
-			// testing
-			// System.out.println("Game loop is running");
+			
+			checkFinished();
 			
 			update();
-			
 			repaint();
 			
 			try {
@@ -95,6 +104,8 @@ public class GamePanel extends JPanel implements Runnable {
 				e.printStackTrace();
 			}
 		}
+		
+		System.exit(0);
 	}
 	
 	private void update() {
@@ -102,16 +113,43 @@ public class GamePanel extends JPanel implements Runnable {
 		player.update();
 	}
 	
+	private void checkFinished() {
+
+		// check if player tile X,Y == finish tile X,Y
+		if (player.getTileX() == map.getFinishX() && player.getTileY() == map.getFinishY()) {
+			isFinished = true;
+		}
+	}
+	
+	private void playFinishSound() {
+		try {
+			URL soundURL = getClass().getResource("/sounds/finish.wav");
+			AudioInputStream audioInStream = AudioSystem.getAudioInputStream(soundURL);
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioInStream);
+			clip.start();
+		} catch (Exception ex) {
+			
+		}
+	}
+	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
 		
-    	// draw map
-    	tileMgr.drawMap(g2);
-    	
-    	// draw player on map
-    	player.draw(g2);
-		
+		// draw map
+		tileMgr.drawMap(g2);
+
+		// draw player on map
+		player.draw(g2);
+	
+		if (!isFinished) {
+			playTime += (double) 1/60;	
+		} else {
+			playFinishSound();
+			tileMgr.drawFinish(g2, playTime);
+		}
+				
 	    g2.dispose();
 	}
 	
@@ -122,6 +160,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public CollisionChecker getCollisionChecker() {
 		return this.collisionChecker;
 	}
+	
 	public int getTileSize() {
 		return this.tileSize;
 	}
@@ -132,5 +171,13 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public int getMaxScreenColumn() {
 		return this.maxScreenCol;
-	}	
+	}
+	
+	public int getScreenWidth() {
+		return this.screenWidth;
+	}
+	
+	public boolean getIsFinished() {
+		return this.isFinished;
+	}
 }

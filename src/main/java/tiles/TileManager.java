@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 
 import javax.imageio.ImageIO;
 
@@ -20,6 +21,7 @@ public class TileManager {
 	private int tileSize;
 	private int maxMapRow;
 	private int maxMapCol;
+	private int screenWidth;
 	
 	private int mapTileCodes[][];
 	
@@ -31,7 +33,8 @@ public class TileManager {
 		tileSize = gp.getTileSize();
 		maxMapRow = gp.getMaxScreenRow();
 		maxMapCol = gp.getMaxScreenColumn();
-		viewTiles = new Tile[2];
+		screenWidth = gp.getScreenWidth();
+		viewTiles = new Tile[3];
 		mapTileCodes = new int[maxMapCol][maxMapRow];
 		
 		// initialize map to blank tiles
@@ -43,21 +46,6 @@ public class TileManager {
 		
 		loadTileImages();
 		loadDungeonMap(this.map.getFileName());
-	}
-
-	public void drawMap(Graphics2D g2) {
-		
-		for (int counterX = 0; counterX < maxMapCol; counterX++) {
-
-			int screenX = counterX * tileSize;
-			
-			for (int counterY = 0; counterY < maxMapRow; counterY++) {
-				
-				int screenY = counterY * tileSize;
-				int tileNum = mapTileCodes[counterX][counterY];
-				g2.drawImage(viewTiles[tileNum].getImage(), screenX, screenY, null);
-			}
-		}		
 	}
 	
 	private void loadDungeonMap(String mapFile) {
@@ -98,8 +86,9 @@ public class TileManager {
 
 	private void loadTileImages() {
 
-		setupViewTile(0, "black.png", true);
+		setupViewTile(0, "wall.png", true);
 		setupViewTile(1, "path.png", false);
+		setupViewTile(2, "finish.png", false);
 	}
 	
 	private void setupViewTile(int tileIndex, String tileFileName, boolean collision) {
@@ -114,6 +103,38 @@ public class TileManager {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+	}
+	
+	public void drawMap(Graphics2D g2) {
+		
+		for (int counterX = 0; counterX < maxMapCol; counterX++) {
+
+			int screenX = counterX * tileSize;
+			
+			for (int counterY = 0; counterY < maxMapRow; counterY++) {
+				
+				int screenY = counterY * tileSize;
+				int tileNum = mapTileCodes[counterX][counterY];
+				g2.drawImage(viewTiles[tileNum].getImage(), screenX, screenY, null);
+			}
+		}		
+	}
+	
+	public void drawFinish(Graphics2D g2, double time) {
+		
+		int windowX = tileSize * 2;
+		int windowY = tileSize / 2;
+		int windowWidth = screenWidth - (tileSize * 4);
+		int windowHeight = tileSize * 5;	
+		DecimalFormat dFormat = new DecimalFormat("0.00");
+		
+		// window
+		GraphicsTools.drawSubWindow(g2, windowX, windowY, windowWidth, windowHeight);
+		// text
+		int textX = windowX + (tileSize * 3);
+		GraphicsTools.displayText(g2, textX, windowY + (tileSize * 2), "Finished", 50);
+		GraphicsTools.displayText(g2, textX, windowY + (tileSize * 4),
+				"in " + dFormat.format(time) + " seconds!", 30);
 	}
 	
 	public int[][] getMapTileCodes() {
