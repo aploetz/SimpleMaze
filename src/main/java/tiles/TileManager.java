@@ -78,7 +78,7 @@ public class TileManager {
 			br.close();
 			
 			
-		} catch (Exception ex) {
+		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
 	}
