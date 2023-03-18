@@ -78,13 +78,13 @@ public class Player {
 
 	private void loadPlayerImages() {
 		
-		up1 = setupEntityImage("/characters/player_map_up_1.png", tileSize, tileSize);
-		down1 = setupEntityImage("/characters/player_map_down_1.png", tileSize, tileSize);
-		right1 = setupEntityImage("/characters/player_map_right_1.png", tileSize, tileSize);
-		left1 = setupEntityImage("/characters/player_map_left_1.png", tileSize, tileSize);
+		up1 = setupPlayerImage("/characters/player_map_up_1.png", tileSize, tileSize);
+		down1 = setupPlayerImage("/characters/player_map_down_1.png", tileSize, tileSize);
+		right1 = setupPlayerImage("/characters/player_map_right_1.png", tileSize, tileSize);
+		left1 = setupPlayerImage("/characters/player_map_left_1.png", tileSize, tileSize);
 	}
 	
-	private BufferedImage setupEntityImage(String imagePath, int width, int height) {
+	private BufferedImage setupPlayerImage(String imagePath, int width, int height) {
 		BufferedImage image = null;
 		
 		try {
