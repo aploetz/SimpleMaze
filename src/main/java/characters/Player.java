@@ -153,22 +153,6 @@ public class Player {
 		this.screenY = screenY;
 	}
 	
-	public BufferedImage getUp1() {
-		return this.up1;
-	}
-
-	public BufferedImage getDown1() {
-		return this.up1;
-	}
-
-	public BufferedImage getLeft1() {
-		return this.up1;
-	}
-
-	public BufferedImage getRight1() {
-		return this.up1;
-	}
-
 	public int getSpeed() {
 		return this.speed;
 	}

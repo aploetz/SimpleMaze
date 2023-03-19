@@ -11,7 +11,6 @@ public class KeyHandler implements KeyListener {
 	private boolean downPressed = false;
 	private boolean leftPressed = false;
 	private boolean rightPressed = false;
-	private boolean enterPressed = false;
 	
 	public KeyHandler(GamePanel gamePanel) {
 		this.gamePanel = gamePanel;
@@ -21,7 +20,7 @@ public class KeyHandler implements KeyListener {
 		
 		int code = keyEvent.getKeyCode();
 		
-		if (!gamePanel.getIsFinished()) {
+		if (!gamePanel.isFinished()) {
 			if (code == KeyEvent.VK_W) {
 				upPressed = true;
 			}
@@ -57,9 +56,6 @@ public class KeyHandler implements KeyListener {
 		if (code == KeyEvent.VK_D) {
 			rightPressed = false;
 		}
-		if (code == KeyEvent.VK_ENTER) {
-			enterPressed = false;
-		}
 	}
 
 	public void keyTyped(KeyEvent arg0) {
@@ -80,9 +76,5 @@ public class KeyHandler implements KeyListener {
 
 	public boolean isRightPressed() {
 		return rightPressed;
-	}
-
-	public boolean isEnterPressed() {
-		return enterPressed;
 	}
 }

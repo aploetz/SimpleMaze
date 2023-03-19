@@ -30,17 +30,15 @@ public class GamePanel extends JPanel implements Runnable {
 	private final int screenWidth = tileSize * maxScreenCol; // 512x
 	private final int screenHeight = tileSize * maxScreenRow; // 512
 	
-	// Game engine
+	// game engine
 	private final int fPS = 60; // frames per second
 	private Thread gameThread;
 	private TileManager tileMgr;
 	private KeyHandler keyHandler = new KeyHandler(this);
 	private LevelMap map;
 	private CollisionChecker collisionChecker;
-	private boolean isFinished = false;
+	private boolean finished = false;
 	private double playTime;
-	
-	// characters and objects
 	private Player player = new Player(this, keyHandler);
 	
 	public GamePanel() {
@@ -119,7 +117,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 		// check if player tile X,Y == finish tile X,Y
 		if (player.getTileX() == map.getFinishX() && player.getTileY() == map.getFinishY()) {
-			isFinished = true;
+			finished = true;
 		}
 	}
 	
@@ -131,7 +129,7 @@ public class GamePanel extends JPanel implements Runnable {
 			clip.open(audioInStream);
 			clip.start();
 		} catch (Exception ex) {
-			
+			ex.printStackTrace();
 		}
 	}
 	
@@ -145,8 +143,8 @@ public class GamePanel extends JPanel implements Runnable {
 		// draw player on map
 		player.draw(g2);
 	
-		if (!isFinished) {
-			playTime += (double) 1/60;	
+		if (!finished) {
+			playTime += (double) 1 / fPS;	
 		} else {
 			playFinishSound();
 			tileMgr.drawFinish(g2, playTime);
@@ -179,7 +177,7 @@ public class GamePanel extends JPanel implements Runnable {
 		return this.screenWidth;
 	}
 	
-	public boolean getIsFinished() {
-		return this.isFinished;
+	public boolean isFinished() {
+		return this.finished;
 	}
 }
